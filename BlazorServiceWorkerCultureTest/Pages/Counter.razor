@@ -1,4 +1,6 @@
-﻿@page "/counter"
+﻿@page "/"
+@using BlazorServiceWorkerCultureTest.Services
+@implements IDisposable
 
 <PageTitle>Counter</PageTitle>
 
@@ -6,13 +8,30 @@
 
 <p role="status">Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="IncrementCount">@(ServiceWorkerUpdateWatchService.InstallWaiting ? "Skip Waiting" : "Nothing to do")</button>
 
 @code {
     private int currentCount = 0;
 
+    [Inject]
+    ServiceWorkerUpdateWatchService ServiceWorkerUpdateWatchService { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        ServiceWorkerUpdateWatchService.OnServiceWorkerInstalled += OnServiceWorkerInstalled;
+    }
+
+    void OnServiceWorkerInstalled()
+    {
+        StateHasChanged();
+    }
+
     private void IncrementCount()
     {
-        currentCount++;
+        ServiceWorkerUpdateWatchService.TellServiceWorkerSkipWaiting();
+    }
+    public void Dispose()
+    {
+        ServiceWorkerUpdateWatchService.OnServiceWorkerInstalled -= OnServiceWorkerInstalled;
     }
 }

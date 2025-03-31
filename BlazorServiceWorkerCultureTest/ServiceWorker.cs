@@ -7,6 +7,7 @@ namespace BlazorServiceWorkerCultureTest
     {
         public ServiceWorker(BlazorJSRuntime js) : base(js)
         {
+            // service worker code ....
         }
     }
 }
