@@ -21,7 +21,7 @@ builder.Services.RegisterServiceWorker<ServiceWorker>(new ServiceWorkerConfig
     // optionally set service worker register options
     Options = new ServiceWorkerRegistrationOptions
     {
-        //UpdateViaCache = "none",
+        UpdateViaCache = "none",
     }
 });
 
