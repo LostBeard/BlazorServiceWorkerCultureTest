@@ -6,18 +6,24 @@ namespace BlazorServiceWorkerCultureTest.FS
 {
     public class WASMFileSystem : JSObject
     {
-        static string[] VariableName = new string[] { "Blazor.runtime.Module.FS" };
         public Dictionary<string, JSObject> FileSystems => JSRef!.Get<Dictionary<string, JSObject>>("filesystems");
+        /// <summary>
+        /// Returns WASMFileSystem? from 'Blazor.runtime.Module.FS ?? Module.FS'
+        /// </summary>
+        /// <returns></returns>
         public static WASMFileSystem GetWASMFileSystem()
         {
-            WASMFileSystem? ret = null;
-            foreach (var name in VariableName)
-            {
-                ret = JS.Get<WASMFileSystem>(name);
-                if (ret != null) return ret;
-            }
-            throw new Exception("Blazor.runtime.Module.FS not found");
+            // Not sure if Blazor.runtime.Module.FS has always existed. I read Module.FS was removed and t ouse Blazor.runtime.Module.FS isntead, so check for both starting with most recent.
+            var ret = JS.Get<WASMFileSystem>("Blazor.runtime.Module.FS") ?? JS.Get<WASMFileSystem>("Module.FS");
+            if (ret == null) throw new Exception("Blazor.runtime.Module.FS not found");
+            return ret;
         }
+        /// <summary>
+        /// Returns true if an entry for the specified filesystem is found in 'filesystems'.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public bool FileSystemExists(string type) => JSRef!.IsUndefined($"filesystems.{type}");
         ///<inheritdoc/>
         public WASMFileSystem(IJSInProcessObjectReference _ref) : base(_ref) { }
         /// <summary>
@@ -146,6 +152,5 @@ namespace BlazorServiceWorkerCultureTest.FS
         /// <returns></returns>
         public Task<bool> WriteFile(string path, byte[] data) => JSRef!.CallAsync<bool>("writeFile", path, data);
         #endregion
-
     }
 }

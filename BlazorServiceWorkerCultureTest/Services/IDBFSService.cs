@@ -16,8 +16,8 @@ namespace BlazorServiceWorkerCultureTest.Services
         public IDBFSService(BlazorJSRuntime js)
         {
             JS = js;
-            using var idbfs = JS.Get<JSObject>("Blazor.runtime.Module.FS.filesystems.IDBFS");
-            IsSupported = idbfs != null;
+            FS = WASMFileSystem.GetWASMFileSystem();
+            IsSupported = FS.FileSystemExists("IDBFS");
             if (!IsSupported)
             {
                 JS.LogWarn("IDBFSService is loaded but 'Blazor.runtime.Module.FS.filesystems.IDBFS' is not set. The setting '<EmccExtraLDFlags>-lidbfs.js</EmccExtraLDFlags>' should be added the Blazor .csproj");
