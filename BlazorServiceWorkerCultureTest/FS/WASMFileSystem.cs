@@ -57,7 +57,7 @@ namespace BlazorServiceWorkerCultureTest.FS
         /// <param name="callback">A notification callback function that is invoked on completion of the synchronization. If an error occurred, it will be provided as a parameter to this function.</param>
         public void SyncFS(bool populate, ActionCallback<JSObject?> callback) => JSRef!.CallVoid("syncfs", populate, callback);
 
-        public JSObject? MountTest(EnumString<FFFSType> fsType, FSMountOptions options, string mountPoint) => JSRef!.Call<JSObject?>("mount", fsType, options, mountPoint);
+        public JSObject? MountTest(JSObject fsType, FSMountOptions options, string mountPoint) => JSRef!.Call<JSObject?>("mount", fsType, options, mountPoint);
 
         /// <summary>
         /// Allows mounting of WORKERFS in supported builds of ffmpeg.wasm

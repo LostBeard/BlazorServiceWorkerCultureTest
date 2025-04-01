@@ -16,15 +16,24 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // Enable WASM Web Workers and Service Worker
 builder.Services.AddBlazorJSRuntime();
 builder.Services.AddWebWorkerService();
-builder.Services.RegisterServiceWorker<ServiceWorker>(new ServiceWorkerConfig
+
+var useServiceWorker = false;
+if (useServiceWorker)
 {
-    ImportServiceWorkerAssets = true,
-    // optionally set service worker register options
-    Options = new ServiceWorkerRegistrationOptions
+    builder.Services.RegisterServiceWorker<ServiceWorker>(new ServiceWorkerConfig
     {
-        UpdateViaCache = "none",
-    }
-});
+        ImportServiceWorkerAssets = true,
+        // optionally set service worker register options
+        Options = new ServiceWorkerRegistrationOptions
+        {
+            UpdateViaCache = "none",
+        }
+    });
+}
+else
+{
+    builder.Services.UnregisterServiceWorker();
+}
 
 builder.Services.AddSingleton<ServiceWorkerUpdateWatchService>();
 

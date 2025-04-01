@@ -31,7 +31,9 @@ namespace BlazorServiceWorkerCultureTest.Services
                 return;
             }
             FS.MkDir(DBFolder);
-            var ret = FS.MountTest(FFFSType.IDBFS, new FSMountOptions { }, DBFolder);
+            var type = "IDBFS";
+            using var idbfs = JS.Get<JSObject>($"Blazor.runtime.Module.FS.filesystems.{type}");
+            var ret = FS.MountTest(idbfs, new FSMountOptions { }, DBFolder);
             JS.Log("_MountTest", ret);
             JS.Set("_MountTest", ret);
             await FS.SyncFS(true);
