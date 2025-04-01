@@ -20,14 +20,6 @@ namespace BlazorServiceWorkerCultureTest.FS
         }
         ///<inheritdoc/>
         public WASMFileSystem(IJSInProcessObjectReference _ref) : base(_ref) { }
-        //public async Task Mount(string type, WASMFileSystemMountOptions options, string mountPoint)
-        //{
-        //    using var fsType = JS.Get<JSObject>($"Blazor.runtime.Module.FS.filesystems.{type}");
-        //    if (fsType == null)
-        //    {
-        //        throw new Exception($"Filesystem type not found: {type}");
-        //    }
-        //}
         /// <summary>
         /// 
         /// </summary>
@@ -51,35 +43,37 @@ namespace BlazorServiceWorkerCultureTest.FS
             await tcs.Task;
         }
         /// <summary>
-        /// 
+        /// Responsible for iterating and synchronizing all mounted file systems in an asynchronous fashion.
         /// </summary>
         /// <param name="populate">true to initialize Emscripten’s file system data with the data from the file system’s persistent source, and false to save Emscripten`s file system data to the file system’s persistent source.</param>
         /// <param name="callback">A notification callback function that is invoked on completion of the synchronization. If an error occurred, it will be provided as a parameter to this function.</param>
         public void SyncFS(bool populate, ActionCallback<JSObject?> callback) => JSRef!.CallVoid("syncfs", populate, callback);
-
-        public JSObject? MountTest(JSObject fsType, FSMountOptions options, string mountPoint) => JSRef!.Call<JSObject?>("mount", fsType, options, mountPoint);
-
         /// <summary>
-        /// Allows mounting of WORKERFS in supported builds of ffmpeg.wasm
+        /// Mounts the filesytem at the given mountpoint
         /// </summary>
         /// <param name="fsType"></param>
         /// <param name="options"></param>
         /// <param name="mountPoint"></param>
         /// <returns></returns>
-        public Task<bool> Mount(EnumString<FFFSType> fsType, FSMountOptions options, string mountPoint) => JSRef!.CallAsync<bool>("mount", fsType, options, mountPoint);
+        public FSNode? Mount(JSObject fsType, FSMountOptions options, string mountPoint) => JSRef!.Call<FSNode?>("mount", fsType, options, mountPoint);
+        /// <summary>
+        /// Mounts the filesytem at the given mountpoint
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="options"></param>
+        /// <param name="mountPoint"></param>
+        /// <returns></returns>
+        public FSNode? Mount(string type, FSMountOptions options, string mountPoint)
+        {
+            using var fsType = JS.Get<JSObject>($"Blazor.runtime.Module.FS.filesystems.{type}");
+            return fsType == null ? null : Mount(fsType, options, mountPoint);
+        }
         /// <summary>
         /// Use to unmount a mounted filesystem
         /// </summary>
         /// <param name="mountPoint"></param>
         /// <returns></returns>
         public Task<bool> Unmount(string mountPoint) => JSRef!.CallAsync<bool>("unmount", mountPoint);
-        /// <summary>
-        /// Convenience function to mount WORKERFS in supported builds of ffmpeg.wasm
-        /// </summary>
-        /// <param name="mountPoint"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public Task<bool> MountWorkerFS(string mountPoint, FSMountWorkerFSOptions options) => Mount(FFFSType.WORKERFS, options, mountPoint);
         /// <summary>
         /// Creates a new directory node in the file system.
         /// </summary>
@@ -97,24 +91,6 @@ namespace BlazorServiceWorkerCultureTest.FS
         /// <param name="path"></param>
         public void Unlink(string path) => JSRef!.CallVoid("unlink", path);
         #region FileSystemMethods
-        ///// <summary>
-        ///// Create a directory.
-        ///// </summary>
-        ///// <param name="path"></param>
-        ///// <returns></returns>
-        //public Task<bool> CreateDir(string path) => JSRef!.CallAsync<bool>("createDir", path);
-        ///// <summary>
-        ///// Delete an empty directory.
-        ///// </summary>
-        ///// <param name="path"></param>
-        ///// <returns></returns>
-        //public Task<bool> DeleteDir(string path) => JSRef!.CallAsync<bool>("deleteDir", path);
-        ///// <summary>
-        ///// List directory contents.
-        ///// </summary>
-        ///// <param name="path"></param>
-        ///// <returns></returns>
-        //public Task<FSNode[]> ListDir(string path) => JSRef!.CallAsync<FSNode[]>("listDir", path);
         /// <summary>
         /// Rename a file or directory.
         /// </summary>
@@ -122,12 +98,6 @@ namespace BlazorServiceWorkerCultureTest.FS
         /// <param name="newPath"></param>
         /// <returns></returns>
         public Task<bool> Rename(string oldPath, string newPath) => JSRef!.CallAsync<bool>("rename", oldPath, newPath);
-        ///// <summary>
-        ///// Delete a file.
-        ///// </summary>
-        ///// <param name="path"></param>
-        ///// <returns></returns>
-        //public Task<bool> DeleteFile(string path) => JSRef!.CallAsync<bool>("deleteFile", path);
         // Read
         /// <summary>
         /// Read data from ffmpeg.wasm.

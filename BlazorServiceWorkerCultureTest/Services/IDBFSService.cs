@@ -5,11 +5,13 @@ namespace BlazorServiceWorkerCultureTest.Services
 {
     public class IDBFSService : IAsyncBackgroundService
     {
+        // IAsyncBackgroundService services are automatically started and initialized by BlazorJSRuntime before any page loads
+        // Ready will be awaited by BlazorJSRuntime before any page is laoded
         Task? _Ready = null;
         public Task Ready => _Ready ??= InitAsync();
+        public bool IsSupported { get; private set; }
         const string DBFolder = "/data";
         BlazorJSRuntime JS;
-        public bool IsSupported { get; private set; }
         WASMFileSystem FS;
         public IDBFSService(BlazorJSRuntime js)
         {
@@ -21,8 +23,11 @@ namespace BlazorServiceWorkerCultureTest.Services
                 JS.LogWarn("IDBFSService is loaded but 'Blazor.runtime.Module.FS.filesystems.IDBFS' is not set. The setting '<EmccExtraLDFlags>-lidbfs.js</EmccExtraLDFlags>' should be added the Blazor .csproj");
                 return;
             }
-            FS = WASMFileSystem.GetWASMFileSystem();
         }
+        /// <summary>
+        /// This method will be ran on startup via the Ready property
+        /// </summary>
+        /// <returns></returns>
         async Task InitAsync()
         {
             if (!IsSupported)
@@ -31,16 +36,18 @@ namespace BlazorServiceWorkerCultureTest.Services
                 return;
             }
             FS.MkDir(DBFolder);
-            var type = "IDBFS";
-            using var idbfs = JS.Get<JSObject>($"Blazor.runtime.Module.FS.filesystems.{type}");
-            var ret = FS.MountTest(idbfs, new FSMountOptions { }, DBFolder);
-            JS.Log("_MountTest", ret);
-            JS.Set("_MountTest", ret);
+            FS.Mount("IDBFS", new FSMountOptions { }, DBFolder);
             await FS.SyncFS(true);
             JS.Log("IDBFS MountFinished");
         }
+        /// <summary>
+        /// Synchronize the IDBFS
+        /// </summary>
+        /// <param name="populate"></param>
+        /// <returns></returns>
         public async Task Sync(bool populate = false)
         {
+            if (!IsSupported) return;
             await FS.SyncFS(populate);
         }
     }
