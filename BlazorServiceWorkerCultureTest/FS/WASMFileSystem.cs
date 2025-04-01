@@ -23,7 +23,7 @@ namespace BlazorServiceWorkerCultureTest.FS
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public bool FileSystemExists(string type) => JSRef!.IsUndefined($"filesystems.{type}");
+        public bool FileSystemExists(string type) => !JSRef!.IsUndefined($"filesystems.{type}");
         ///<inheritdoc/>
         public WASMFileSystem(IJSInProcessObjectReference _ref) : base(_ref) { }
         /// <summary>
