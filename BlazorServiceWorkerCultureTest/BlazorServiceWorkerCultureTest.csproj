@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <CompressionEnabled>false</CompressionEnabled>
+    <EmccExtraLDFlags>-lidbfs.js</EmccExtraLDFlags>
   </PropertyGroup>
 
   <ItemGroup>

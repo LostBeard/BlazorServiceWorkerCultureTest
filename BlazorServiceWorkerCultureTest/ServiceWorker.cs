@@ -1,4 +1,5 @@
 ﻿using SpawnDev.BlazorJS;
+using SpawnDev.BlazorJS.JSObjects;
 using SpawnDev.BlazorJS.WebWorkers;
 
 namespace BlazorServiceWorkerCultureTest
@@ -8,6 +9,10 @@ namespace BlazorServiceWorkerCultureTest
         public ServiceWorker(BlazorJSRuntime js) : base(js)
         {
             // service worker code ....
+        }
+        protected override async Task ServiceWorker_OnPushAsync(PushEvent e)
+        {
+            
         }
     }
 }
