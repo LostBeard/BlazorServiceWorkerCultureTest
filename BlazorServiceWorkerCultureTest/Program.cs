@@ -17,6 +17,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddBlazorJSRuntime();
 builder.Services.AddWebWorkerService();
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
 var useServiceWorker = true;
 if (useServiceWorker)
 {
