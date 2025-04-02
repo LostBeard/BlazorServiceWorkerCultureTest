@@ -8,10 +8,12 @@ namespace BlazorServiceWorkerCultureTest
     public class ServiceWorker : ServiceWorkerEventHandler
     {
         WebWorkerService WebWorkerService;
-        public ServiceWorker(BlazorJSRuntime js, WebWorkerService webWorkerService) : base(js)
+        NavigationManager NavigationManager;
+        public ServiceWorker(BlazorJSRuntime js, WebWorkerService webWorkerService, NavigationManager navigationManager) : base(js)
         {
             // service worker code ....
             WebWorkerService = webWorkerService;
+            NavigationManager = navigationManager;
         }
         protected override async Task ServiceWorker_OnPushAsync(PushEvent e)
         {
@@ -48,7 +50,6 @@ namespace BlazorServiceWorkerCultureTest
 
                             // access the notification data set in the push event handler
                             var payload = notification.DataAs<Payload>();
-                            
 
                             // close the notification
                             notification.Close();
@@ -63,17 +64,35 @@ namespace BlazorServiceWorkerCultureTest
                             // WebWorkerService provides a way to directly call any service running in any in winow running your app
                             // for an example use WebWorkerService to call JS.Log in all open windows
                             var windows = WebWorkerService.Instances.Where(o => o.Info.Scope == GlobalScope.Window).ToList();
-                            foreach (var window in windows)
+                            var windowFirst = windows.FirstOrDefault();
+                            // if there is no window that meets your needs you can open a new one (mostly only works in the notification click event when in a service worker)
+                            if (windowFirst == null)
                             {
-                                // this will use the BlazorJSRuntime service in the window's scope to call js.Log
-                                // any service can be accessed in any running instance of your app in any scope (windows, workers, etc)
-                                await window.Run<BlazorJSRuntime>(js => js.Log("message from service worker: notification was clicked"));
-                                // 
-
-                                // navigate this window to payload.Url
-                                await window.Run<NavigationManager>(navigationManager => navigationManager.NavigateTo(payload.Url.TrimStart('/'), false, false));
-
-                                //await window.Run<BlazorJSRuntime>(js => js.CallVoid("alert", "notification was clicked"));
+                                try
+                                {
+                                    // ope na new window at the payload page
+                                    windowFirst = await WebWorkerService.OpenWindow(payload.Url);
+                                    // windowFirst may be null here
+                                }
+                                catch (Exception ex)
+                                {
+                                    // create may fail with or without an error
+                                }
+                            }
+                            else
+                            {
+                                // sen the existing window the paylaod page
+                                await windowFirst.Run<NavigationManager>(navigationManager => navigationManager.NavigateTo(payload.Url.TrimStart('/'), false, false));
+                            }
+                            if (windowFirst != null)
+                            {
+                                // can hand off the paylaod to the window if desired
+                                await windowFirst.Run<ServiceWorker>(sw => sw.HandlePushAction(payload));
+                            }
+                            else
+                            {
+                                // could not hand off the payload to a window...
+                                // could store it and have a service ;ook for missed payoads on startup if needed
                             }
                         }
                         break;
@@ -85,12 +104,16 @@ namespace BlazorServiceWorkerCultureTest
                 JS.Log(ex.StackTrace ?? "");
             }
         }
-        protected override async Task<Response> ServiceWorker_OnFetchAsync(FetchEvent e)
+        /// <summary>
+        /// This method will be called by this service running in the service worker scope whe na push notification action is chosen
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        async Task HandlePushAction(Payload payload)
         {
-            JS.Log(">> ServiceWorker_OnFetchAsync");
-            var ret = await base.ServiceWorker_OnFetchAsync(e);
-            JS.Log("<< ServiceWorker_OnFetchAsync");
-            return ret;
+            // this method will be called by the service worker but will wun in the window scope
+            JS.Log($"{JS.GlobalScope.ToString()} {JS.InstanceId} received the push notification payload");
+            // could fire an event pages and components could listen to here
         }
     }
 }

@@ -1,7 +1,77 @@
-﻿@page "/OldHome"
+﻿@page "/"
+@using BlazorServiceWorkerCultureTest.Services
+@using SpawnDev.BlazorJS
+@using SpawnDev.BlazorJS.JSObjects
+@implements IDisposable
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Service Worker Test</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Service Worker Test</h1>
 
-Welcome to your new app.
+<div>
+    Update Ready: @(ServiceWorkerUpdateWatchService.InstallWaiting)<br />
+    @if (ServiceWorkerUpdateWatchService.InstallWaiting)
+    {
+        <button class="btn btn-primary" @onclick="IncrementCount">@(ServiceWorkerUpdateWatchService.InstallWaiting ? "Update Installed. Restart Now" : "Nothing to do")</button>
+    }
+</div>
+<div>
+    Notification Permission: @(Notification.Permission ?? "unsupported")<br/>
+    @if (!NotificationPermissionGranted)
+    {
+        <p>
+            Before using 'Chrome DevTools > Application > Service workers > Push' notification permission must be granted.
+        </p>
+        <button class="btn btn-primary" @onclick="EnableNotifications">Enable Notifications</button>
+    }
+    else
+    {
+        <div>
+            Test push notification:<br/>
+            <ul>
+                <li>Chrome DevTools > Application > Service workers > Push</li>
+                <li>Click the notification button</li>
+                <li>Browser windows running the app will load the Weather page</li>
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    private int currentCount = 0;
+
+    [Inject]
+    ServiceWorkerUpdateWatchService ServiceWorkerUpdateWatchService { get; set; } = default!;
+
+    [Inject]
+    BlazorJSRuntime JS { get; set; }
+
+    bool NotificationPermissionGranted => Notification.Permission == "granted";
+    bool NotificationPermissionDenied => Notification.Permission == "denied";
+    bool NotificationPermissionDefault => Notification.Permission == "default";
+
+
+    protected override void OnInitialized()
+    {
+        ServiceWorkerUpdateWatchService.OnServiceWorkerInstalled += OnServiceWorkerInstalled;
+    }
+
+    async Task EnableNotifications()
+    {
+        await Notification.RequestPermission();
+    }
+
+    void OnServiceWorkerInstalled()
+    {
+        StateHasChanged();
+    }
+
+    private void IncrementCount()
+    {
+        ServiceWorkerUpdateWatchService.TellServiceWorkerSkipWaiting();
+    }
+    public void Dispose()
+    {
+        ServiceWorkerUpdateWatchService.OnServiceWorkerInstalled -= OnServiceWorkerInstalled;
+    }
+}
