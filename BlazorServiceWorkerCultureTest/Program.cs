@@ -14,8 +14,17 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Enable WASM Web Workers and Service Worker
-builder.Services.AddBlazorJSRuntime();
+builder.Services.AddBlazorJSRuntime(out var JS);
+//if (JS.GlobalThis is WorkerGlobalScope workerGlobalScope)
+//{
+//    workerGlobalScope.ImportScripts("./_content/PeerEmShared/js/interop.min.js");
+//}
+//else
+//{
+//    await JS.Import("./_content/PeerEmShared/js/interop.min.js");
+//}
 builder.Services.AddWebWorkerService();
+
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
