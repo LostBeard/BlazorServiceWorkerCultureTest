@@ -78,7 +78,17 @@ namespace BlazorServiceWorkerCultureTest
                                 }
                                 catch (Exception ex)
                                 {
+                                    JS.Log("WebWorkerService.OpenWindow error", ex.Message);
+                                    JS.Log(ex.StackTrace);
                                     // create may fail with or without an error
+                                }
+                                if (windowFirst != null)
+                                {
+                                    JS.Log("windowFirst != null");
+                                }
+                                else
+                                {
+                                    JS.Log("windowFirst == null");
                                 }
                             }
                             else
