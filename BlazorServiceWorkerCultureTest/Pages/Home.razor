@@ -10,13 +10,19 @@
 
 <div>
     Update Ready: @(ServiceWorkerUpdateWatchService.InstallWaiting)<br />
-    @if (ServiceWorkerUpdateWatchService.InstallWaiting)
-    {
-        <button class="btn btn-primary" @onclick="IncrementCount">@(ServiceWorkerUpdateWatchService.InstallWaiting ? "Update Installed. Restart Now" : "Nothing to do")</button>
-    }
+    <div>
+        @if (ServiceWorkerUpdateWatchService.InstallWaiting)
+        {
+            <button class="btn btn-primary" @onclick="IncrementCount">@(ServiceWorkerUpdateWatchService.InstallWaiting ? "Update Installed. Restart Now" : "Nothing to do")</button>
+        }
+        else
+        {
+            <button class="btn btn-primary" @onclick="ServiceWorkerUpdateWatchService.UpdateCheck">Update Check</button>
+        }
+    </div>
 </div>
 <div>
-    Notification Permission: @(Notification.Permission ?? "unsupported")<br/>
+    Notification Permission: @(Notification.Permission ?? "unsupported")<br />
     @if (!NotificationPermissionGranted)
     {
         <p>
@@ -27,17 +33,15 @@
     else
     {
         <div>
-            Test push notification:<br/>
+            Test push notification:<br />
             <ul>
                 <li>Chrome DevTools > Application > Service workers > Push</li>
                 <li>Click the notification button</li>
-                <li>Browser windows running the app will load the Weather page</li>
+                <li>A window running your app will go to the weather page and recieve the payload data</li>
+                <li>If no window is running (you closed it after initiating the push event) one is opened to the weather page and will recieve the payload data</li>
             </ul>
         </div>
     }
-    <div>
-        <button class="btn btn-primary" @onclick="ServiceWorkerUpdateWatchService.UpdateCheck">Update Check</button>
-    </div>
 </div>
 
 @code {
