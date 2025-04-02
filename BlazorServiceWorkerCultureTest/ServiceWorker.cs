@@ -18,7 +18,8 @@ namespace BlazorServiceWorkerCultureTest
             JS.Log("ServiceWorker_OnPushAsync", e);
             // demo payload for example
             // normally info is extracted from the event's PushMessageData at e.Data
-            // Example read push message data as a Json object - var jsonObject = e.Data.Json<DataObjectType>();
+            // Example read push message data as a Json object
+            //var payload = e.Data.Json<Payload>();
             var payload = new Payload
             {
                 Message = "Waether Alert.",
