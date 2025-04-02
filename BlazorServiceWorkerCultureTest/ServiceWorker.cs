@@ -8,12 +8,10 @@ namespace BlazorServiceWorkerCultureTest
     public class ServiceWorker : ServiceWorkerEventHandler
     {
         WebWorkerService WebWorkerService;
-        NavigationManager NavigationManager;
-        public ServiceWorker(BlazorJSRuntime js, WebWorkerService webWorkerService, NavigationManager navigationManager) : base(js)
+        public ServiceWorker(BlazorJSRuntime js, WebWorkerService webWorkerService) : base(js)
         {
             // service worker code ....
             WebWorkerService = webWorkerService;
-            NavigationManager = navigationManager;
         }
         protected override async Task ServiceWorker_OnPushAsync(PushEvent e)
         {
