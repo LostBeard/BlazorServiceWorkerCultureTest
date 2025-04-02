@@ -105,6 +105,7 @@ namespace BlazorServiceWorkerCultureTest
                             {
                                 // could not hand off the payload to a window...
                                 // could store it and have a service ;ook for missed payoads on startup if needed
+                                JS.Log("No window available");
                             }
                         }
                         break;
