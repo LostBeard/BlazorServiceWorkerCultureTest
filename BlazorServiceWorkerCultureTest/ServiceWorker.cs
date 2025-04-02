@@ -28,7 +28,7 @@ namespace BlazorServiceWorkerCultureTest
             {
                 Body = payload.Message,
                 Icon = "icon-512.png",
-                Data = new { Url = payload.Url },
+                Data = payload,
                 Actions = new[] { new ShowNotificationsOptionAction { Action = "open", Title = "Open now" } },
             });
         }
