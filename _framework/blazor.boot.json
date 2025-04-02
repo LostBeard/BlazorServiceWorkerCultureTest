@@ -1,9 +1,9 @@
 {
   "mainAssemblyName": "BlazorServiceWorkerCultureTest",
   "resources": {
-    "hash": "sha256-IEiZMPVlMYDq980z7JbPrqkWSXTK2+ouUL9KuPi/cRk=",
+    "hash": "sha256-J7+HZxZoLFH2IiKxvc+X1ajcmvvbulSOHnrRhxKcPuk=",
     "fingerprinting": {
-      "BlazorServiceWorkerCultureTest.yrenttd0mg.wasm": "BlazorServiceWorkerCultureTest.wasm",
+      "BlazorServiceWorkerCultureTest.286lpxyx1l.wasm": "BlazorServiceWorkerCultureTest.wasm",
       "Microsoft.AspNetCore.Components.kwu8fibn80.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.horg9ede60.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.8jpozh081x.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
@@ -77,7 +77,7 @@
       "System.Runtime.InteropServices.JavaScript.0tgicm7vjk.wasm": "sha256-bAbPaONHne7R1hItHoY8/SYWlDb84JZQ1cxd1Y+tJn0="
     },
     "assembly": {
-      "BlazorServiceWorkerCultureTest.yrenttd0mg.wasm": "sha256-jktmSQWGVopfLZJZ0TSRQFBU0TF52GSECa9ltyKUl7U=",
+      "BlazorServiceWorkerCultureTest.286lpxyx1l.wasm": "sha256-PrBVbxVF2or9KT95RVAyh3KcfwelMJdAybBYHGYThwo=",
       "Microsoft.AspNetCore.Components.kwu8fibn80.wasm": "sha256-dLV7HHZ/PrB/7l9P4y0LSihrmgVddnOXNyEA6A1+rOg=",
       "Microsoft.AspNetCore.Components.Web.horg9ede60.wasm": "sha256-IeFoTML5Y+08HUO7Y/EzCm+FA6ElP6xk2BCusOjNF9Y=",
       "Microsoft.AspNetCore.Components.WebAssembly.8jpozh081x.wasm": "sha256-vIGxuhZIgCOLOuKjeGZjPs8LKHW/sju9PKwcvMLuk5U=",
