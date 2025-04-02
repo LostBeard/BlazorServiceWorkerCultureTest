@@ -35,6 +35,9 @@
             </ul>
         </div>
     }
+    <div>
+        <button class="btn btn-primary" @onclick="ServiceWorkerUpdateWatchService.UpdateCheck">Update Check</button>
+    </div>
 </div>
 
 @code {
@@ -49,7 +52,6 @@
     bool NotificationPermissionGranted => Notification.Permission == "granted";
     bool NotificationPermissionDenied => Notification.Permission == "denied";
     bool NotificationPermissionDefault => Notification.Permission == "default";
-
 
     protected override void OnInitialized()
     {

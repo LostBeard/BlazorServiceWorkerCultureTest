@@ -83,7 +83,7 @@ namespace BlazorServiceWorkerCultureTest
                             }
                             else
                             {
-                                // sen the existing window the paylaod page
+                                // send the existing window the paylaod page
                                 await windowFirst.Run<NavigationManager>(navigationManager => navigationManager.NavigateTo(payloadUrl, false, false));
                             }
                             if (windowFirst != null)
@@ -114,7 +114,7 @@ namespace BlazorServiceWorkerCultureTest
         async Task HandlePushAction(Payload payload)
         {
             // this method will be called by the service worker but will wun in the window scope
-            JS.Log($"{JS.GlobalScope.ToString()} {JS.InstanceId} received the push notification payload");
+            JS.Log($"{JS.GlobalScope.ToString()} {JS.InstanceId} received the push notification payload", payload);
             // could fire an event pages and components could listen to here
         }
     }

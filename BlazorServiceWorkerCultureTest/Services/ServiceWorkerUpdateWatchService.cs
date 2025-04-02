@@ -48,6 +48,12 @@ namespace BlazorServiceWorkerCultureTest.Services
             }
         }
 
+        public async Task UpdateCheck()
+        {
+            if (WebWorkerService.ActiveServiceWorkerRegistration == null) return;
+            await WebWorkerService.ActiveServiceWorkerRegistration.Update();
+        }
+
         void InstallApp()
         {
             using var serviceWorker = Navigator.ServiceWorker;
