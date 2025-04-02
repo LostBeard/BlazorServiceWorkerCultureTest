@@ -64,13 +64,16 @@ namespace BlazorServiceWorkerCultureTest
                             var windows = WebWorkerService.Instances.Where(o => o.Info.Scope == GlobalScope.Window).ToList();
                             // find a window to pass payload to
                             var windowFirst = windows.FirstOrDefault();
+                            // make the payload url relative
+                            // an absolute url (starts with /) will fail if your Blazor app has a non-root baseHref
+                            var payloadUrl = payload.Url.TrimStart('/');
                             // if there is no window that meets your needs you can open a new one (mostly only works in the notification click event when in a service worker)
                             if (windowFirst == null)
                             {
                                 try
                                 {
                                     // ope na new window at the payload page
-                                    windowFirst = await WebWorkerService.OpenWindow(payload.Url);
+                                    windowFirst = await WebWorkerService.OpenWindow(payloadUrl);
                                     // windowFirst may be null here
                                 }
                                 catch (Exception ex)
@@ -81,7 +84,7 @@ namespace BlazorServiceWorkerCultureTest
                             else
                             {
                                 // sen the existing window the paylaod page
-                                await windowFirst.Run<NavigationManager>(navigationManager => navigationManager.NavigateTo(payload.Url.TrimStart('/'), false, false));
+                                await windowFirst.Run<NavigationManager>(navigationManager => navigationManager.NavigateTo(payloadUrl, false, false));
                             }
                             if (windowFirst != null)
                             {
