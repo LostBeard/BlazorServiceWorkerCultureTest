@@ -64,6 +64,7 @@ namespace BlazorServiceWorkerCultureTest
                             // WebWorkerService provides a way to directly call any service running in any in winow running your app
                             // for an example use WebWorkerService to call JS.Log in all open windows
                             var windows = WebWorkerService.Instances.Where(o => o.Info.Scope == GlobalScope.Window).ToList();
+                            // find a window to pass payload to
                             var windowFirst = windows.FirstOrDefault();
                             // if there is no window that meets your needs you can open a new one (mostly only works in the notification click event when in a service worker)
                             if (windowFirst == null)
