@@ -17,7 +17,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddBlazorJSRuntime();
 builder.Services.AddWebWorkerService();
 
-var useServiceWorker = false;
+var useServiceWorker = true;
 if (useServiceWorker)
 {
     builder.Services.RegisterServiceWorker<ServiceWorker>(new ServiceWorkerConfig

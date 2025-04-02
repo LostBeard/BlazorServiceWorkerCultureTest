@@ -90,17 +90,14 @@ namespace BlazorServiceWorkerCultureTest.Services
             }
         }
 
-        private async void WebWorkerService_OnServiceWorkerUpdateFound()
+        private void WebWorkerService_OnServiceWorkerUpdateFound()
         {
             if (JS.IsWindow)
             {
                 JS.Log("Service worker update found");
-                // check if a service worker update is waiting 
-                using var registration = await JS.GetAsync<ServiceWorkerRegistration>("navigator.serviceWorker.ready");
-                NewWorker = registration.Installing;
-                NewWorker!.OnStateChange += NewWorker_OnStateChange;
+                NewWorker = WebWorkerService.ActiveServiceWorkerRegistration!.Installing!;
+                NewWorker.OnStateChange += NewWorker_OnStateChange;
             }
-
         }
 
         public bool InstallWaiting { get; set; } = false;
