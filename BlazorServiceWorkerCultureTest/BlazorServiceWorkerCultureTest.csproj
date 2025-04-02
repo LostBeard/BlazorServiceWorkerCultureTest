@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="SpawnDev.BlazorJS" Version="2.11.0" />
-    <PackageReference Include="SpawnDev.BlazorJS.WebWorkers" Version="2.9.0" />
+    <PackageReference Include="SpawnDev.BlazorJS.WebWorkers" Version="2.9.1" />
   </ItemGroup>
 
   <ItemGroup>
