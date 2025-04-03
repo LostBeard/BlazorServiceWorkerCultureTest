@@ -73,7 +73,7 @@ namespace BlazorServiceWorkerCultureTest
                             {
                                 try
                                 {
-                                    // ope na new window at the payload page
+                                    // open a new window at the payload page
                                     windowFirst = await WebWorkerService.OpenWindow(payloadUrl);
                                     // windowFirst may be null here
                                 }
@@ -94,7 +94,7 @@ namespace BlazorServiceWorkerCultureTest
                             }
                             else
                             {
-                                // send the existing window the paylaod page
+                                // send the existing window to the payload page
                                 await windowFirst.Run<NavigationManager>(navigationManager => navigationManager.NavigateTo(payloadUrl, false, false));
                             }
                             if (windowFirst != null)
