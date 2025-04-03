@@ -13,16 +13,24 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Enable WASM Web Workers and Service Worker
 builder.Services.AddBlazorJSRuntime(out var JS);
-//if (JS.GlobalThis is WorkerGlobalScope workerGlobalScope)
-//{
-//    workerGlobalScope.ImportScripts("./_content/PeerEmShared/js/interop.min.js");
-//}
-//else
-//{
-//    await JS.Import("./_content/PeerEmShared/js/interop.min.js");
-//}
+// might fail on first load of new service worker if not loading the app from a cache
+try
+{
+    if (JS.GlobalThis is WorkerGlobalScope workerGlobalScope)
+    {
+        workerGlobalScope.ImportScripts("./custom-interop.js");
+    }
+    else
+    {
+        await JS.Import("./custom-interop.js");
+    }
+}
+catch (Exception ex)
+{
+    JS.Log("Failed to load custom-interop.js in " + JS.GlobalScope.ToString());
+}
+// Enable WASM Web Workers and Service Worker
 builder.Services.AddWebWorkerService();
 
 
