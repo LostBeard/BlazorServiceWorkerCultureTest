@@ -1,3 +1,5 @@
 # BlazorServiceWorkerCultureTest
 
-Demonstrates a Blaozr WASM ServiceWorker with Push events, Notifications and Cache updating.
+Demonstrates a Blazor WASM ServiceWorker with Push events, Notifications and ServiceWorker updates handling.
+
+
