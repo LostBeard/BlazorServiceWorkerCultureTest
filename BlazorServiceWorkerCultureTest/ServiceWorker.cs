@@ -115,7 +115,7 @@ namespace BlazorServiceWorkerCultureTest
             catch (Exception ex)
             {
                 JS.Log("ServiceWorker_OnNotificationClickAsync error", ex.Message);
-                JS.Log(ex.StackTrace ?? "");
+                JS.Log(ex.StackTrace);
             }
         }
         /// <summary>
