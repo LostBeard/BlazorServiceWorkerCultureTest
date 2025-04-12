@@ -42,10 +42,27 @@
             </ul>
         </div>
     }
+    <div>
+        Push Notifications
+    </div>
+    @if (PushNotificationsEnabled)
+    {
+        <div>
+            <button class="btn btn-primary" @onclick="DisablePush">Disable Push</button>
+        </div>
+    }
+    else
+    {
+        <div>
+            <button class="btn btn-primary" @onclick="EnablePush">Enable Push</button>
+        </div>
+    }
 </div>
 
 @code {
     private int currentCount = 0;
+
+    bool PushNotificationsEnabled = false;
 
     [Inject]
     ServiceWorkerUpdateWatchService ServiceWorkerUpdateWatchService { get; set; } = default!;
@@ -60,6 +77,69 @@
     protected override void OnInitialized()
     {
         ServiceWorkerUpdateWatchService.OnServiceWorkerInstalled += OnServiceWorkerInstalled;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        PushNotificationsEnabled = await GetPushSubscription() != null;
+    }
+
+    async Task<PushManager?> GetPushManager()
+    {
+        using var ServiceWorkerContainer = JS.Get<ServiceWorkerContainer>("navigator.serviceWorker");
+        using var controller = ServiceWorkerContainer.Controller;
+        var swIsActive = controller != null && controller.State == "activated";
+        if (!swIsActive)
+        {
+            return null;
+        }
+        var serviceWorkerRegistration = await ServiceWorkerContainer.Ready;
+        if (serviceWorkerRegistration == null)
+        {
+            return null;
+        }
+        return serviceWorkerRegistration.PushManager;
+    }
+
+    async Task<PushSubscription?> GetPushSubscription()
+    {
+        using var pushManager = await GetPushManager();
+        if (pushManager == null)
+        {
+            return null;
+        }
+        return await pushManager.GetSubscription();
+    }
+
+    async Task<bool> EnablePush()
+    {
+        return await Subscribe("BJ5IxJBWdeqFDJTvrZ4wNRu7UY2XigDXjgiUBYEYVXDudxhEs0ReOJRBcBHsPYgZ5dyV8VjyqzbQKS8V7bUAglk");
+    }
+    async Task<bool> Subscribe(string applicationServerKey)
+    {
+        using var pushManager = await GetPushManager();
+        if (pushManager == null)
+        {
+            return false;
+        }
+        var subOptions = new PushManagerSubscribeOptions
+            {
+                ApplicationServerKey = applicationServerKey,
+                UserVisibleOnly = true,
+            };
+        //JS.Log("subscription_options", subOptions);
+        //JS.Set("_subscription_options", subOptions);
+        using var subscription = await pushManager.Subscribe(subOptions);
+        PushNotificationsEnabled = subscription != null;
+        return PushNotificationsEnabled;
+    }
+    async Task DisablePush()
+    {
+        using var subscription = await GetPushSubscription();
+        if (subscription != null)
+        {
+            await subscription.Unsubscribe();
+        }
+        PushNotificationsEnabled = false;
     }
 
     async Task EnableNotifications()

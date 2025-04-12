@@ -33,6 +33,10 @@ namespace BlazorServiceWorkerCultureTest
                 Actions = new[] { new ShowNotificationsOptionAction { Action = "open", Title = "Open now" } },
             });
         }
+        protected override async Task ServiceWorker_OnPushSubscriptionChangeAsync(PushSubscriptionChangeEvent e)
+        {
+            JS.Log("ServiceWorker_OnPushSubscriptionChangeAsync", e);
+        }
         protected override async Task ServiceWorker_OnNotificationClickAsync(NotificationEvent e)
         {
             try
