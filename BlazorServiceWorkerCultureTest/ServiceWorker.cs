@@ -37,6 +37,10 @@ namespace BlazorServiceWorkerCultureTest
         {
             JS.Log("ServiceWorker_OnPushSubscriptionChangeAsync", e);
         }
+        protected override async Task ServiceWorker_OnPeriodicSyncAsync(PeriodicSyncEvent e)
+        {
+            JS.Log("ServiceWorker_OnPeriodicSyncAsync", e.Tag);
+        }
         protected override async Task ServiceWorker_OnNotificationClickAsync(NotificationEvent e)
         {
             try

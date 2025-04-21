@@ -112,6 +112,13 @@
 
     async Task<bool> EnablePush()
     {
+        // Publicly available test keys from here: https://blog.atulr.com/web-notifications/
+        // generated using npm package web-push
+        // THESE KEYS ARE FOR TESTING ONLY
+        // Public Key:
+        // BJ5IxJBWdeqFDJTvrZ4wNRu7UY2XigDXjgiUBYEYVXDudxhEs0ReOJRBcBHsPYgZ5dyV8VjyqzbQKS8V7bUAglk
+        // Private Key:
+        // ERIZmc5T5uWGeRxedxu92k3HnpVwy_RCnQfgek1x2Y4
         return await Subscribe("BJ5IxJBWdeqFDJTvrZ4wNRu7UY2XigDXjgiUBYEYVXDudxhEs0ReOJRBcBHsPYgZ5dyV8VjyqzbQKS8V7bUAglk");
     }
     async Task<bool> Subscribe(string applicationServerKey)
